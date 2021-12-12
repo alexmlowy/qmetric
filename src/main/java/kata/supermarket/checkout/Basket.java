@@ -16,7 +16,7 @@ public class Basket {
         this.items.computeIfAbsent(item.name(), v -> new ArrayList<>()).add(item);
     }
 
-    Map<ItemName, List<Item>> items() {
+    public Map<ItemName, List<Item>> items() {
         return Collections.unmodifiableMap(items);
     }
 }
