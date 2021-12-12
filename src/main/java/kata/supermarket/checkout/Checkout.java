@@ -1,22 +1,18 @@
-package kata.supermarket;
+package kata.supermarket.checkout;
+
+import kata.supermarket.model.Item;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-public class Basket {
-    private final Map<String, List<Item>> items;
+public class Checkout {
 
-    public Basket() {
-        this.items = new HashMap<>();
-    }
+    private final Basket basket;
 
-    public void add(final Item item) {
-        this.items.computeIfAbsent(item.name(), v -> new ArrayList<>()).add(item);
-    }
-
-    Map<String, List<Item>> items() {
-        return Collections.unmodifiableMap(items);
+    public Checkout(final Basket basket) {
+        this.basket = basket;
     }
 
     public BigDecimal total() {
@@ -24,10 +20,10 @@ public class Basket {
     }
 
     private class TotalCalculator {
-        private final Map<String, List<Item>> items;
+        private final Map<ItemName, List<Item>> items;
 
         TotalCalculator() {
-            this.items = items();
+            this.items = basket.items();
         }
 
         private BigDecimal subtotal() {
@@ -40,10 +36,10 @@ public class Basket {
 
         /**
          * TODO: This could be a good place to apply the results of
-         *  the discount calculations.
-         *  It is not likely to be the best place to do those calculations.
-         *  Think about how Basket could interact with something
-         *  which provides that functionality.
+         * the discount calculations.
+         * It is not likely to be the best place to do those calculations.
+         * Think about how Basket could interact with something
+         * which provides that functionality.
          */
         private BigDecimal discounts() {
             return BigDecimal.ZERO;

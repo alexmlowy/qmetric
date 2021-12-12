@@ -1,4 +1,6 @@
-package kata.supermarket;
+package kata.supermarket.model;
+
+import kata.supermarket.checkout.ItemName;
 
 import java.math.BigDecimal;
 
@@ -15,7 +17,7 @@ public class ItemByUnit implements Item {
     }
 
     @Override
-    public String name() {
+    public ItemName name() {
         return product.name();
     }
 }

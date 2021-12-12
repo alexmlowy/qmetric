@@ -1,5 +1,8 @@
-package kata.supermarket;
+package kata.supermarket.checkout;
 
+import kata.supermarket.model.Item;
+import kata.supermarket.model.Product;
+import kata.supermarket.model.WeighedProduct;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -10,10 +13,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
-class BasketTest {
+class CheckoutTest {
+
+    private static final PriceList PRICE_LIST = createPriceList();
+
+    private static PriceList createPriceList() {
+        final PriceList priceList = new PriceList();
+        priceList.add(ItemName.American_Sweets_Per_Kilo, new BigDecimal("4.99"));
+        priceList.add(ItemName.Milk, new BigDecimal("0.49"));
+        priceList.add(ItemName.Pack_Of_Digestives, new BigDecimal("1.55"));
+        priceList.add(ItemName.Pick_And_Mix_Per_Kilo, new BigDecimal("2.99"));
+        return priceList;
+    }
 
     @DisplayName("basket provides its total value when containing...")
     @MethodSource
@@ -21,7 +34,9 @@ class BasketTest {
     void basketProvidesTotalValue(String description, String expectedTotal, Iterable<Item> items) {
         final Basket basket = new Basket();
         items.forEach(basket::add);
-        assertThat(new BigDecimal(expectedTotal), comparesEqualTo(basket.total()));
+
+        final Checkout checkout = new Checkout(basket);
+        assertThat(new BigDecimal(expectedTotal)).isEqualByComparingTo((checkout.total()));
     }
 
     static Stream<Arguments> basketProvidesTotalValue() {
@@ -58,15 +73,15 @@ class BasketTest {
     }
 
     private static Item aPintOfMilk() {
-        return new Product("Milk", new BigDecimal("0.49")).oneOf();
+        return new Product(ItemName.Milk, PRICE_LIST.getPrice(ItemName.Milk)).oneOf();
     }
 
     private static Item aPackOfDigestives() {
-        return new Product("Pack of Digestives", new BigDecimal("1.55")).oneOf();
+        return new Product(ItemName.Pack_Of_Digestives, PRICE_LIST.getPrice(ItemName.Pack_Of_Digestives)).oneOf();
     }
 
     private static WeighedProduct aKiloOfAmericanSweets() {
-        return new WeighedProduct("Kilo of American Sweets", new BigDecimal("4.99"));
+        return new WeighedProduct(ItemName.American_Sweets_Per_Kilo, PRICE_LIST.getPrice(ItemName.American_Sweets_Per_Kilo));
     }
 
     private static Item twoFiftyGramsOfAmericanSweets() {
@@ -74,7 +89,7 @@ class BasketTest {
     }
 
     private static WeighedProduct aKiloOfPickAndMix() {
-        return new WeighedProduct("Kilo of Pick and Mix", new BigDecimal("2.99"));
+        return new WeighedProduct(ItemName.Pick_And_Mix_Per_Kilo, PRICE_LIST.getPrice(ItemName.Pick_And_Mix_Per_Kilo));
     }
 
     private static Item twoHundredGramsOfPickAndMix() {
