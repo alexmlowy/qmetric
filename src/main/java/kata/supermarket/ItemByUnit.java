@@ -13,4 +13,9 @@ public class ItemByUnit implements Item {
     public BigDecimal price() {
         return product.pricePerUnit();
     }
+
+    @Override
+    public String name() {
+        return product.name();
+    }
 }
