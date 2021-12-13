@@ -56,7 +56,8 @@ class CheckoutTest {
                 multipleItemsPricedPerUnit(),
                 aSingleItemPricedByWeight(),
                 multipleItemsPricedByWeight(),
-                aSingleItemWithDiscountApplied()
+                aSingleItemWithDiscountApplied(),
+                multipleItemsWithMultipleDiscountsApplied()
         );
     }
 
@@ -84,7 +85,11 @@ class CheckoutTest {
     }
 
     private static Arguments aSingleItemWithDiscountApplied() {
-        return Arguments.of("a single item priced per unit", "0.24", Collections.singleton(aPintOfMilk()), singletonList(discount("0.25")));
+        return Arguments.of("a single item with discount applied", "0.24", Collections.singleton(aPintOfMilk()), singletonList(discount("0.25")));
+    }
+
+    private static Arguments multipleItemsWithMultipleDiscountsApplied() {
+        return Arguments.of("multiple items with multiple discounts applied", "0.79", Arrays.asList(aPintOfMilk(), aPackOfDigestives()), Arrays.asList(discount("0.25"), discount("1")));
     }
 
     private static Item aPintOfMilk() {

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-class BuyOneGetOneFreeTest {
+class TwoForOnePoundTest {
 
     private static final PriceList PRICE_LIST = createPriceList();
 
@@ -34,7 +34,7 @@ class BuyOneGetOneFreeTest {
     @MethodSource
     @ParameterizedTest(name = "{0}")
     void basketProvidesTotalDiscount(String description, String expectedDiscount, EnumSet<ItemName> applicableItems, Basket basket) {
-        final Discount discount = new BuyOneGetOneFree(applicableItems, PRICE_LIST);
+        final Discount discount = new TwoForOnePound(applicableItems, PRICE_LIST);
 
         final BigDecimal discountReduction = discount.calculate(basket);
         assertThat(discountReduction).isEqualByComparingTo(new BigDecimal(expectedDiscount));
@@ -45,7 +45,8 @@ class BuyOneGetOneFreeTest {
                 noApplicableItems(),
                 noMatchingItems(),
                 notApplicableOnSingleItem(),
-                discountAppliedOnTwoMatchingItems(),
+                discountAppliedOnTwoMatchingItemsEvenIfBadDeal(),
+                discountAppliedOnTwoMatchingItemsGoodDeal(),
                 discountAppliedOnlyOncePerMatchingPair(),
                 discountAppliedMultipleTimesOnMatchingPairs(),
                 discountAppliedOnMultipleItems()
@@ -64,20 +65,31 @@ class BuyOneGetOneFreeTest {
         return Arguments.of("not applicable on single item", "0", EnumSet.of(Milk), createBasket(Milk));
     }
 
-    private static Arguments discountAppliedOnTwoMatchingItems() {
-        return Arguments.of("discount applied on two matching items", "0.49", EnumSet.of(Milk), createBasket(Milk, Milk));
+    private static Arguments discountAppliedOnTwoMatchingItemsEvenIfBadDeal() {
+        //This deal is not beneficial for the customer. What would have cost £0.98 now costs £1.
+        //Details like this can be clarified based on business requirements
+        return Arguments.of("discount applied on two matching items", "-0.02", EnumSet.of(Milk),
+                createBasket(Milk, Milk));
+    }
+
+    private static Arguments discountAppliedOnTwoMatchingItemsGoodDeal() {
+        return Arguments.of("discount applied on two matching items", "2.10", EnumSet.of(Pack_Of_Digestives),
+                createBasket(Pack_Of_Digestives, Pack_Of_Digestives));
     }
 
     private static Arguments discountAppliedOnlyOncePerMatchingPair() {
-        return Arguments.of("discount applied only once per matching pair", "0.49", EnumSet.of(Milk), createBasket(Milk, Milk, Milk));
+        return Arguments.of("discount applied only once per matching pair", "2.10", EnumSet.of(Pack_Of_Digestives),
+                createBasket(Pack_Of_Digestives, Pack_Of_Digestives, Pack_Of_Digestives));
     }
 
     private static Arguments discountAppliedMultipleTimesOnMatchingPairs() {
-        return Arguments.of("discount applied multiple times on matching pairs", "0.98", EnumSet.of(Milk), createBasket(Milk, Milk, Milk, Milk));
+        return Arguments.of("discount applied multiple times on matching pairs", "4.20", EnumSet.of(Pack_Of_Digestives),
+                createBasket(Pack_Of_Digestives, Pack_Of_Digestives, Pack_Of_Digestives, Pack_Of_Digestives));
     }
 
     private static Arguments discountAppliedOnMultipleItems() {
-        return Arguments.of("discount applied on multiple items", "2.04", EnumSet.of(Milk, Pack_Of_Digestives), createBasket(Milk, Milk, Pack_Of_Digestives, Pack_Of_Digestives));
+        return Arguments.of("discount applied on multiple items", "2.08", EnumSet.of(Milk, Pack_Of_Digestives),
+                createBasket(Milk, Milk, Pack_Of_Digestives, Pack_Of_Digestives));
     }
 
     private static Basket createBasket(final ItemName... name) {
