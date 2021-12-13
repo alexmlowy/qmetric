@@ -1,6 +1,6 @@
 package kata.supermarket.checkout;
 
-import kata.supermarket.checkout.discount.Discount;
+import kata.supermarket.checkout.discount.single_product.Discount;
 import kata.supermarket.model.Item;
 
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package kata.supermarket.checkout.discount;
+package kata.supermarket.checkout.discount.single_product;
 
 import kata.supermarket.checkout.ItemName;
 import kata.supermarket.checkout.PriceList;

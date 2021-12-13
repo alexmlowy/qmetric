@@ -3,6 +3,8 @@ package kata.supermarket.checkout.discount;
 import kata.supermarket.checkout.Basket;
 import kata.supermarket.checkout.ItemName;
 import kata.supermarket.checkout.PriceList;
+import kata.supermarket.checkout.discount.single_product.BuyOneGetOneFree;
+import kata.supermarket.checkout.discount.single_product.Discount;
 import kata.supermarket.model.Item;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -1,4 +1,4 @@
-package kata.supermarket.checkout.discount;
+package kata.supermarket.checkout.discount.single_product;
 
 import kata.supermarket.checkout.ItemName;
 import kata.supermarket.checkout.PriceList;
@@ -10,8 +10,8 @@ import java.util.List;
 
 public class TwoForOnePound extends SingleProductDiscount {
 
-    public TwoForOnePound(final EnumSet<ItemName> applicableItems, final PriceList priceList) {
-        super(applicableItems, priceList);
+    public TwoForOnePound(final EnumSet<ItemName> eligibleItems, final PriceList priceList) {
+        super(eligibleItems, priceList);
     }
 
     @Override
